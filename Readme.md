@@ -56,8 +56,9 @@ using a pc and video recored .mp4
 
 ## Referents
 
-1. [People counting HOG + Linear SVM](https://pyimagesearch.com/2018/08/13/opencv-people-counter/)
-2. [People counting using blob](https://blogs.wcode.org/2015/04/footfall-a-camera-based-people-counting-system-for-under-60/)
+1. [People counting HOG + Linear SVM](https://pyimagesearch.com/2018/08/13/opencv-people-counter/) - [github proyect](https://github.com/saimj7/People-Counting-in-Real-Time)
+2. [People counting using blob](https://blogs.wcode.org/2015/04/footfall-a-camera-based-people-counting-system-for-under-60/) - [github proyect](https://github.com/WatershedArts/Footfall)
+3. [other project](https://github.com/jeffskinnerbox/people-counter)
 3. [Haar cascade counting](http://funvision.blogspot.com/2017/01/lbp-cascade-for-head-and-people.html)
 4. [Training Hard cascade](https://pythonprogramming.net/haar-cascade-object-detection-python-opencv-tutorial/)
 5. [Python with MQTT ]()
