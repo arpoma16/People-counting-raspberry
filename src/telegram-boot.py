@@ -1,12 +1,11 @@
-
-#https://www.geeksforgeeks.org/send-message-to-telegram-user-using-python/
-
 # importing all required libraries
 import telebot
 from telethon.sync import TelegramClient
 from telethon.tl.types import InputPeerUser, InputPeerChannel
 from telethon import TelegramClient, sync, events
- 
+
+import os
+from dotenv import load_dotenv
   
 # get your api_id, api_hash, token
 # from telegram as described above
@@ -51,3 +50,6 @@ except Exception as e:
  
 # disconnecting the telegram session
 client.disconnect()
+
+if __name__ == "__main__":
+	# send a hello human

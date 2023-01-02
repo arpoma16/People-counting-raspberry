@@ -1,56 +1,121 @@
-#https://www.emqx.com/en/blog/how-to-use-mqtt-in-python
-
-
-# python 3.6
-
+import os
 import random
 import time
-
+from dotenv import load_dotenv
 from paho.mqtt import client as mqtt_client
+import paho.mqtt.publish as mqtt_publish
 
 
-broker = 'broker.emqx.io'
-port = 1883
-topic = "python/mqtt"
-# generate client ID with pub prefix randomly
-client_id = f'python-mqtt-{random.randint(0, 1000)}'
-# username = 'emqx'
-# password = 'public'
+import json
 
-def connect_mqtt():
-    def on_connect(client, userdata, flags, rc):
-        if rc == 0:
-            print("Connected to MQTT Broker!")
-        else:
-            print("Failed to connect, return code %d\n", rc)
+load_dotenv()
 
-    client = mqtt_client.Client(client_id)
-    client.username_pw_set(username, password)
+mqtt_broker = os.getenv( 'MQTT_BROQUER_DIRECTION')
+mqtt_port = int(os.getenv( 'MQTT_BROQUER_PORT'))
+mqtt_default_topic = os.getenv('MQTT_CLIENT_DEFAULT_TOPIC')
+
+mqtt_client_id = os.getenv('MQTT_CLIENT_ID')
+mqtt_username = os.getenv('MQTT_CLIENT_USERNAME')
+mqtt_password = os.getenv('MQTT_CLIENT_PASSWORD')
+mqtt_keep_alive = 60
+
+
+input_count_json = {"variable": "input_people", "unit": "unit", "value": random.randint(0,30)}
+
+# Define event callbacks
+def on_connect(client, userdata, flags, rc):
+    if rc == 0:
+        print("Connected to MQTT Broker!")
+    else:
+        print("Failed to connect, return code rc: " + str(rc))
+
+#def on_connect(client, userdata, flags, rc):
+#    print("rc: " + str(rc))
+
+def on_message(client, obj, msg):
+    print(msg.topic + " " + str(msg.qos) + " " + str(msg.payload))
+
+def on_publish(client, obj, mid):
+    print("mid: " + str(mid))
+
+def on_subscribe(client, obj, mid, granted_qos):
+    print("Subscribed: " + str(mid) + " " + str(granted_qos))
+
+def on_log(client, obj, level, string):
+    print(string)
+
+def on_disconnect(client, userdata, rc):
+    if rc != 0:
+        print("Unexpected disconnection.")
+
+
+def run_mqtt():
+    client = mqtt_client.Client()
+    # Assign event callbacks
+    client.on_message = on_message
     client.on_connect = on_connect
-    client.connect(broker, port)
+    client.on_publish = on_publish
+    client.on_subscribe = on_subscribe
+    client.on_subscribe = on_disconnect
+    
+    #Connect
+    client.username_pw_set(mqtt_username, mqtt_password)
+    client.connect(mqtt_broker, mqtt_port)
+    client.loop_start()
     return client
 
 
 def publish(client):
-    msg_count = 0
-    while True:
-        time.sleep(1)
-        msg = f"messages: {msg_count}"
-        result = client.publish(topic, msg)
-        # result: [0, 1]
-        status = result[0]
-        if status == 0:
-            print(f"Send `{msg}` to topic `{topic}`")
-        else:
-            print(f"Failed to send message to topic {topic}")
-        msg_count += 1
+    msg = json.dumps(input_count_json)
+    result = client.publish( "tago/data/post" , msg)
+    status = result[0]
+    if status == 0:
+        print(f"Send {msg} to topic {mqtt_default_topic}")
+    else:
+        print(f"Failed to send message to topic {mqtt_default_topic}")
 
+def publish_taggo(client,variable = "input_people",value = 0):
+    msg_json = {"variable": variable , "unit": "unit", "value": value}
+    msg = json.dumps(msg_json)
+    result = client.publish(mqtt_default_topic, msg)
+    status = result[0]
+    if status == 0:
+        print(f"Send {msg} to topic {mqtt_default_topic}")
+    else:
+        print(f"Failed to send message to topic {mqtt_default_topic}")
 
-def run():
-    client = connect_mqtt()
-    client.loop_start()
-    publish(client)
+def publish_people_in(client,value):
+    publish_taggo(client,variable = "input_people",value = value)
+
+def publish_people_out(client,value):
+    publish_taggo(client,variable = "output_people",value = value)
+
+def publish_people_into(client,value):
+    publish_taggo(client,variable = "people_in_room",value = value)
+
+#################################
+# Estado del contador
+# 0 todo bien   
+# 1 para lleno
+def publish_status(client,value = 0):
+    publish_taggo(client,variable = "status",value = value)
+
+def stop_mqtt(client):
+    client.loop_stop(force=True)
+    client.disconnect()
 
 
 if __name__ == '__main__':
-    run()
+    client = run_mqtt()
+    time.sleep(1)  
+    publish_people_in(client,5)
+    publish_people_out(client,10)
+    publish_people_into(client,23)
+    publish_status(client,1)
+    stop_mqtt(client)
+    time.sleep(1)
+    print("init single_publish ")
+    mqtt_publish.single(mqtt_default_topic, payload=json.dumps(input_count_json), qos=0, retain=False, hostname=mqtt_broker,
+    port=mqtt_port, client_id=mqtt_client_id, auth={'username':mqtt_username, 'password':mqtt_password}, 
+    tls=None, transport="tcp")
+    print("end single_publish ")
