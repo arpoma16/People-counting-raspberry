@@ -24,13 +24,14 @@ for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=
     image = frame.array
 	# muestra el frame
     cv2.imshow("Frame", image)
+    np_img = np.array(img)
 
-
-    writer.write(image)
+    writer.write(np_img)
     rawCapture.truncate(0)
     if cv2.waitKey(1) & 0xFF == 27:
         break
 
+print(np_img.shape)
 writer.release()
 camera.close()
 cv2.destroyAllWindows()
