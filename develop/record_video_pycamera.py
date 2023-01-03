@@ -25,8 +25,9 @@ for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=
 	# muestra el frame
     cv2.imshow("Frame", image)
 
-    writer.write(image)
 
+    writer.write(image)
+    rawCapture.truncate(0)
     if cv2.waitKey(1) & 0xFF == 27:
         break
 
