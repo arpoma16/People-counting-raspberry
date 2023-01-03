@@ -14,6 +14,12 @@ rawCapture = PiRGBArray(camera, size=(640, 480))
 
 # espera un tiempo a aque la cámara esté lista
 time.sleep(0.1)
+# used to record the time when we processed last frame
+prev_frame_time = 0
+ 
+# used to record the time at which we processed current frame
+new_frame_time = 0
+ 
 
 
 writer= cv2.VideoWriter('/home/pi/people_counting.avi', cv2.VideoWriter_fourcc(*'DIVX'), 20, (camera.resolution[0],camera.resolution[1]))
@@ -25,8 +31,13 @@ for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=
 	# muestra el frame
     cv2.imshow("Frame", image)
     np_img = np.array(image)
-
+    
+    new_frame_time = time.time()
+    fps = 1/(new_frame_time-prev_frame_time)
+    prev_frame_time = new_frame_time
+    print("fps:"+str(int(fps)))
     writer.write(np_img)
+
     rawCapture.truncate(0)
     if cv2.waitKey(1) & 0xFF == 27:
         break
