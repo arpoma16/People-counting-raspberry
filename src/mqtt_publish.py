@@ -4,8 +4,6 @@ import time
 from dotenv import load_dotenv
 from paho.mqtt import client as mqtt_client
 import paho.mqtt.publish as mqtt_publish
-
-
 import json
 
 load_dotenv()

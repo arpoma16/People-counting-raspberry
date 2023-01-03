@@ -3,19 +3,21 @@ import telebot
 from telethon.sync import TelegramClient
 from telethon.tl.types import InputPeerUser, InputPeerChannel
 from telethon import TelegramClient, sync, events
-
 import os
 from dotenv import load_dotenv
-  
+
+load_dotenv()
 # get your api_id, api_hash, token
 # from telegram as described above
-api_id = 'API_id'
-api_hash = 'API_hash'
-token = 'bot token'
-message = "Working..."
+api_id = os.getenv( 'TELEGRAM_API_ID')
+api_hash = os.getenv( 'TELEGRAM_API_HASH')
+token = os.getenv( 'TELEGRAM_TOKEN')
+chat_id = int(os.getenv('TELEGRAM_CHAT_ID'))
+phone = os.getenv('TELEGRAM_PHONE_NUMBER')
+message = "Working.mkm.."
  
 # your phone number
-phone = 'YOUR_PHONE_NUMBER_WTH_COUNTRY_CODE'
+
   
 # creating a telegram session and assigning
 # it to a variable client
@@ -35,21 +37,18 @@ if not client.is_user_authorized():
     client.sign_in(phone, input('Enter the code: '))
   
   
+# *** Enviar mensaje usando el ID de chat de Telegram ***
 try:
-    # receiver user_id and access_hash, use
-    # my user_id and access_hash for reference
-    receiver = InputPeerUser('user_id', 'user_hash')
+    print("Creando un receptor de Telegram a partir del ID de chat de Tetlegram...")
+    receptorChat = client.get_entity(chat_id)
+    client.send_message(receptorChat, message)
+        #Solo a modo informativo, obtenemos el nombre del Bot de Telegram al que enviamos el mensaje
+
  
-    # sending message using telegram client
-    client.send_message(receiver, message, parse_mode='html')
 except Exception as e:
-     
-    # there may be many error coming in while like peer
-    # error, wrong access_hash, flood_error, etc
-    print(e);
- 
+    print("Se ha producido un error en el envío por ID de Chat: {}".format(e));
 # disconnecting the telegram session
 client.disconnect()
 
 if __name__ == "__main__":
-	# send a hello human
+	print("ua")
