@@ -24,6 +24,7 @@ def Argparser(defaults):
 
     return ap.parse_args()
 
+
 if __name__ == '__main__':
     defaults = {
          "platform": os.name,

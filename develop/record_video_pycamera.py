@@ -15,7 +15,7 @@ rawCapture = PiRGBArray(camera, size=(640, 480))
 time.sleep(0.1)
 
 
-writer= cv2.VideoWriter('/home/pi/people_counting.mp4', cv2.VideoWriter_fourcc(*'DIVX'), 20, (width,height))
+writer= cv2.VideoWriter('/home/pi/people_counting.mp4', cv2.VideoWriter_fourcc(*'DIVX'), 20, (camera.resolution[0],camera.resolution[1]))
 
 # capture frames from the camera
 for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True):
