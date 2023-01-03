@@ -39,6 +39,12 @@ you can use requirements.txt
     python3 -m venv venv/
     pip install -r requirements.txt
 
+how use virtualenv
+
+    \venv\Scripts\activate.bat
+    \env\Scripts\deactivate.bat
+    pip freeze > requirements.txt
+
 ## Build
 
 Using rapsbery pi  and pycamera
@@ -57,24 +63,21 @@ using a pc and video recored .mp4
 ## Referents
 
 1. [People counting HOG + Linear SVM](https://pyimagesearch.com/2018/08/13/opencv-people-counter/) - [github proyect](https://github.com/saimj7/People-Counting-in-Real-Time)
-2. [People counting using blob](https://blogs.wcode.org/2015/04/footfall-a-camera-based-people-counting-system-for-under-60/) - [github proyect](https://github.com/WatershedArts/Footfall)
-3. [other project](https://github.com/jeffskinnerbox/people-counter)
-3. [Haar cascade counting](http://funvision.blogspot.com/2017/01/lbp-cascade-for-head-and-people.html)
-4. [Training Hard cascade](https://pythonprogramming.net/haar-cascade-object-detection-python-opencv-tutorial/)
-5. [Python with MQTT ]()
-6. [Python with Telegram API]()
-7. [We use virtualenv if you want know more about it](https://realpython.com/python-virtual-environments-a-primer/)
-8. [get data for train IA](https://www.youtube.com/watch?v=z_6fPS5tDNU)
-
+1. [People counting using blob](https://blogs.wcode.org/2015/04/footfall-a-camera-based-people-counting-system-for-under-60/) -  [github proyect](https://github.com/WatershedArts/Footfall)
+1. [other project](https://github.com/jeffskinnerbox/people-counter)
+1. [Haar cascade counting](http://funvision.blogspot.com/2017/01/lbp-cascade-for-head-and-people.html)
+1. [Training Hard cascade](https://pythonprogramming.net/haar-cascade-object-detection-python-opencv-tutorial/)
+1. [Python with MQTT ]( https://www.emqx.com/en/blog/how-to-use-mqtt-in-python )
+1. [Python with Telegram API]( https://www.geeksforgeeks.org/send-message-to-telegram-user-using-python/ )
+1. [We use virtualenv if you want know more about it](https://realpython.com/python-virtual-environments-a-primer/)
+1. [get data for train IA](https://www.youtube.com/watch?v=z_6fPS5tDNU)
 
 ## Crazy ideas for feature
 
 We can use a flask [like this tutorial](https://omes-va.com/videostreaming-flask-opencv-python/) for minimizing the grafical interfaz or disable the graphycal in raspberry py and sett value for feature.
-
 
 ## Authors
 
 - Alvaro Poma.
 
 - Nelson Molina.
-

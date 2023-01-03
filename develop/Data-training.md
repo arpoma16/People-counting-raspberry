@@ -19,9 +19,11 @@ for obtain the positive data we use  the  program  __download-image-link.py__ qu
 
 ## Trainig
 
-[Cascade Classifier Training documentation OpenCV](https://docs.opencv.org/3.4/dc/d88/tutorial_traincascade.html)
+[Other way using a external tool](https://www.youtube.com/watch?v=v_cwOq06g9E&t=329s)
 
-⦁	De estas imágenes positivas y negativas se deben obtener un archivo de texto plano(bg.txt) en el cual   tenga la ruta de cada una de las imágenes en el caso de las imágenes negativas
+[Cascade Classifier Training documentation OpenCV3.4](https://docs.opencv.org/3.4/dc/d88/tutorial_traincascade.html)
+
+De estas imágenes positivas y negativas se deben obtener un archivo de texto plano(bg.txt) en el cual   tenga la ruta de cada una de las imágenes en el caso de las imágenes negativas
 
 En el caso de las imágenes positivas un archivo (info.dat) en el cual tiene la ruta   de cada una de las imágenes y luego el número de objetos a clasificar que se encuentran en la imagen y luego la posición inicial del rectángulo donde se encuentra el objeto de interés seguido de su ancho y de su alto.Para nuestro caso se recortó la imagen de interés por lo cual el cuadrado es del tamaño de toda la imagen recortada. 
 

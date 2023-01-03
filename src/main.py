@@ -2,8 +2,12 @@
 import numpy as np
 import cv2
 import time
-import PersonMod1
 from matplotlib import pyplot as plt
+import Mqtt_publish
+import Argparser
+import TelegramBoot
+import Person
+
 
 #Contadores de entrada y salida
 cnt_up   = 0
@@ -121,7 +125,7 @@ while(cap.isOpened()):
 
 
 			if newblob == True:
-				b = PersonMod1.blobles(bid,x,y,w,h,10)
+				b = Person.blobles(bid,x,y,w,h,10)
 				burbles.append(b)# pone  en la ultima posicion
 				bid += 1 
 
@@ -178,7 +182,7 @@ while(cap.isOpened()):
 							print('timedOut1:  ',i.getId())
 							del i
 					if new == True:
-						p = PersonMod1.MyPerson(pid,cx,cy, max_p_age)
+						p = Person.MyPerson(pid,cx,cy, max_p_age)
 						persons.append(p)# pone  en la ultima posicion
 						pid += 1 
 				# muestra las detecciones por el  haar cascade
