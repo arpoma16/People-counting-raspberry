@@ -24,7 +24,7 @@ for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=
     image = frame.array
 	# muestra el frame
     cv2.imshow("Frame", image)
-    np_img = np.array(img)
+    np_img = np.array(image)
 
     writer.write(np_img)
     rawCapture.truncate(0)
