@@ -1,5 +1,6 @@
 from picamera.array import PiRGBArray
 from picamera import PiCamera
+import numpy as np
 import time
 import cv2
  
@@ -24,7 +25,7 @@ for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=
 	# muestra el frame
     cv2.imshow("Frame", image)
 
-    writer.write(frame)
+    writer.write(image)
 
     if cv2.waitKey(1) & 0xFF == 27:
         break
