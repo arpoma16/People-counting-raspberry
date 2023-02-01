@@ -14,15 +14,16 @@ def Argparser(defaults):
                     help="si es camara ip o video.mp4 , no colocar en caso de usar con la pi camera ",
                     nargs=1,
                     required=False,
-                    choices=['file','ipcamera','usbcamera', 'picamera'],
+                    choices=["file","ipcamera","usbcamera", "picamera"],
                     default='picamera')
 
     ap.add_argument("-i", "--file-in",
                     help="ubicacion del archivo o direccion en caso de camara ip",
                     required=False,
-                    default=defaults["path"] + '/' + defaults["file_in"])
+                    default= defaults["file_in"])
+                    #default=defaults["path"] + '/' + defaults["file_in"])
 
-    return ap.parse_args()
+    return vars(ap.parse_args())
 
 
 if __name__ == '__main__':
@@ -31,8 +32,8 @@ if __name__ == '__main__':
          "path": os.getcwd(),
          "file_in":"../data/Video_example01.mp4"
     }
-    print("default")
+    print("defaults values :")
     print(defaults)
-    print("resultado de Argparser")
+    print("Argparser result:")
     print(Argparser(defaults))
     

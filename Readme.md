@@ -6,7 +6,7 @@ This project is developed like a project of Sistemas Digitales Avanzados of MIER
 
 This project use a rapsbery py for counting-people across a door and sent this data to internet to tago io using mqtt and send a alarm to telegram chat group for  when the place is full and the device is turn on and turn off.
 
-this proyect is based on  [People counting HOG + Linear SVM](https://pyimagesearch.com/2018/08/13/opencv-people-counter/) and  [People counting using blob](https://blogs.wcode.org/2015/04/footfall-a-camera-based-people-counting-system-for-under-60/)
+This proyect is based on  [People counting HOG + Linear SVM](https://pyimagesearch.com/2018/08/13/opencv-people-counter/) and  [People counting using blob](https://blogs.wcode.org/2015/04/footfall-a-camera-based-people-counting-system-for-under-60/)
 
 This is based in two step
 
@@ -24,9 +24,11 @@ This is based in two step
 
 ## Usage
 
+Change the values in .env  for your tago count and tocken of telegram.
 
-Change the values in .env  for your tago count
-''
+you have to run command in the root of proyect like:
+
+        python .\src\main.py --source file --file-in data/Video_example01.avi
 
 ## Dependecies
 
@@ -71,11 +73,13 @@ using a pc and video recored .mp4
 1. [Python with Telegram API]( https://www.geeksforgeeks.org/send-message-to-telegram-user-using-python/ )
 1. [We use virtualenv if you want know more about it](https://realpython.com/python-virtual-environments-a-primer/)
 1. [get data for train IA](https://www.youtube.com/watch?v=z_6fPS5tDNU)
+1. [unifique picamera and opencv](https://pyimagesearch.com/2016/01/04/unifying-picamera-and-cv2-videocapture-into-a-single-class-with-opencv/)
+1. [py camera work with opencv](https://stackoverflow.com/questions/27950013/i-am-trying-make-the-raspberry-pi-camera-work-with-opencv)
 
 ## Crazy ideas for feature
 
 We can use a flask [like this tutorial](https://omes-va.com/videostreaming-flask-opencv-python/) for minimizing the grafical interfaz or disable the graphycal in raspberry py and sett value for feature.
-
+and this [flask with thread](https://pyimagesearch.com/2019/09/02/opencv-stream-video-to-web-browser-html-page/)
 ## Authors
 
 - Alvaro Poma.

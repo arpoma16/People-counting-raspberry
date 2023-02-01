@@ -1,9 +1,13 @@
+# revisar esto https://stackoverflow.com/questions/29583533/videocapture-open0-wont-recognize-pi-cam/37530016#37530016
+#para ver como configurar la raspberry pi.
+# we can use this https://stackoverflow.com/questions/41991097/live-image-processing-with-opencv-and-raspberry-pi
+# for readinfd
 from picamera.array import PiRGBArray
 from picamera import PiCamera
 import numpy as np
 import time
 import cv2
- 
+
 # inicializa la cámara
 camera = PiCamera()
 camera.resolution = (640, 480)
