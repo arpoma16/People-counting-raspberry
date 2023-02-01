@@ -34,6 +34,7 @@ writer= cv2.VideoWriter('/home/pi/people_counting.avi', cv2.VideoWriter_fourcc(*
 
 
 def generate():
+    global new_frame_time,prev_frame_time
     # capture frames from the camera
     for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True):
         # tomamos el array de numpy que reprsenta la image
