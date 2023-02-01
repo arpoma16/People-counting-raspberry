@@ -15,7 +15,7 @@ app = Flask(__name__)
 # inicializa la cámara
 camera = PiCamera()
 camera.resolution = (640, 480)
-camera.framerate = 32
+camera.framerate = 60
 camera.rotation = 180
 camera.hflip = True
 rawCapture = PiRGBArray(camera, size=(640, 480))
