@@ -14,8 +14,8 @@ import cv2
 app = Flask(__name__)
 # inicializa la cámara
 camera = PiCamera()
-camera.resolution = (640, 480)
-camera.framerate = 60
+#camera.resolution = (1920, 1080)
+##camera.framerate = 30
 camera.rotation = 180
 camera.hflip = True
 rawCapture = PiRGBArray(camera, size=(640, 480))
@@ -23,10 +23,10 @@ rawCapture = PiRGBArray(camera, size=(640, 480))
 # espera un tiempo a aque la cámara esté lista
 time.sleep(0.1)
 # used to record the time when we processed last frame
-prev_frame_time = 0
+prev_frame_time = 0.1
  
 # used to record the time at which we processed current frame
-new_frame_time = 0
+new_frame_time = 0.1
  
 def generate():
     global new_frame_time,prev_frame_time
@@ -38,7 +38,7 @@ def generate():
         new_frame_time = time.time()
         fps = 1/(new_frame_time-prev_frame_time)
         prev_frame_time = new_frame_time
-        print("fps:"+str(int(fps)))
+        print(str(np_img.shape)+"  fps:"+str(int(fps)))
 
         rawCapture.truncate(0)
 
