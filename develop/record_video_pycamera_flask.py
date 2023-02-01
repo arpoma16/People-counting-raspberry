@@ -37,9 +37,7 @@ def generate():
     # capture frames from the camera
     for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True):
         # tomamos el array de numpy que reprsenta la image
-        image = frame.array
-        # muestra el frame
-        np_img = np.array(image)
+        np_img = np.array(frame.array)
         
         new_frame_time = time.time()
         fps = 1/(new_frame_time-prev_frame_time)
@@ -49,7 +47,7 @@ def generate():
 
         rawCapture.truncate(0)
 
-        (flag, encodedImage) = cv2.imencode(".jpg", frame)
+        (flag, encodedImage) = cv2.imencode(".jpg", np_img)
         if not flag:
             continue
         yield(b'--frame\r\n' b'Content-Type: image/jpeg\r\n\r\n' +
