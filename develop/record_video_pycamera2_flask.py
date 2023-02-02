@@ -3,6 +3,7 @@
 # we can use this https://stackoverflow.com/questions/41991097/live-image-processing-with-opencv-and-raspberry-pi
 # for readinfd
 from picamera2 import Picamera2
+from libcamera import Transform
 from flask import Flask
 from flask import render_template
 from flask import Response
@@ -15,7 +16,7 @@ app = Flask(__name__)
 camera = Picamera2()
 camera.preview_configuration.main.size=(640,720)
 camera.preview_configuration.main.format="RGB888"
-camera.preview_configuration.Transform(hflip=1, vflip=1)
+camera.preview_configuration.transform =Transform(hflip=1, vflip=1)
 camera.preview_configuration.align()
 camera.configure("preview")
 camera.start()
