@@ -15,6 +15,7 @@ app = Flask(__name__)
 camera = Picamera2()
 camera.preview_configuration.main.size=(640,720)
 camera.preview_configuration.main.format="RGB888"
+camera.preview_configuration.Transform(hflip=1, vflip=1)
 camera.preview_configuration.align()
 camera.configure("preview")
 camera.start()
