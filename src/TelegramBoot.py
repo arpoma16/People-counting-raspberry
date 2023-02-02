@@ -4,7 +4,7 @@ import requests
 
 from dotenv import load_dotenv
 from datetime import datetime
-from telegram import Bot
+#from telegram import Bot
 
 load_dotenv()
 

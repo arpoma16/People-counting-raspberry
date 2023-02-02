@@ -4,9 +4,9 @@ import cv2
 import time
 import os
 
-import Mqtt_publish
-from Argparser import Argparser
-import TelegramBoot
+import mqtt_publish
+from argparser import Argparser
+import telegramBoot
 from Person import MyPerson,blobles
 from VideoGet import VideoStream
 
