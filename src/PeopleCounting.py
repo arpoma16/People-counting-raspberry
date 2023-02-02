@@ -10,11 +10,6 @@ import telegramBoot
 from Person import MyPerson,blobles
 from VideoGet import VideoStream
 
-from flask import Flask
-from flask import render_template
-from flask import Response
-
-
 defaults = {
 		"platform": os.name,
 		"path": os.getcwd(),
@@ -104,6 +99,8 @@ class Peoplecount:
             mqtt_publish.publish_people_out_single(self.countdown)
             self.countdownlast = self.countdown
 
+    def getcount(self):
+        return (self.countup,self.countdown)
 
     def PeopleCounter(self,cap_img,areaTH):
         global frame,pid,bid,max_p_age
@@ -263,7 +260,7 @@ class Peoplecount:
         cv2.putText(img, str_up ,(10,40),font,0.5,(0,0,255),1,cv2.LINE_AA)
         cv2.putText(img, str_down ,(10,90),font,0.5,(255,255,255),2,cv2.LINE_AA)
 
-        self.img_stream_send = cv2.hconcat([img, res])
+        self.img_stream_send = img#cv2.hconcat([img, res])
         self.update_count()
 
     def stop(self):
