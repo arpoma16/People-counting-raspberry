@@ -14,7 +14,7 @@ import cv2
 app = Flask(__name__)
 # inicializa la cámara
 camera = Picamera2()
-camera.preview_configuration.main.size=(640,480)
+camera.preview_configuration.main.size=(800,600)
 camera.preview_configuration.main.format="RGB888"
 camera.preview_configuration.transform =Transform(hflip=1, vflip=1)
 camera.preview_configuration.align()
