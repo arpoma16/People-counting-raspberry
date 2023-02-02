@@ -12,7 +12,7 @@ import cv2
 
 app = Flask(__name__)
 # inicializa la cámara
-camera = PiCamera2()
+camera = Picamera2()
 camera.preview_configuration.main.size=(640,720)
 camera.preview_configuration.main.format="bgr"
 camera.preview_configuration.main.aling()
