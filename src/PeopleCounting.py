@@ -57,16 +57,16 @@ class Peoplecount:
         self.w=0
         self.stopped = False        
 
-        if args["source"]=="file":## ip camera y file es igual
+        if args["source"][0]=="file":## ip camera y file es igual
             print("[INFO] Starting the video ... "+ args['file_in'])
             #cap = cv2.VideoCapture(args['file_in'])
             self.VideoStream_obj = VideoStream(src=args['file_in']).start()
 
-        if args["source"]=="picamera":
+        if args["source"][0]=="picamera":
             print("[INFO] streaming the video  from picamera ok")
             self.VideoStream_obj = VideoStream(usePiCamera=True,src=args['file_in']) .start()
 
-        if args["source"]=="usbcamera":
+        if args["source"][0]=="usbcamera":
             print("[INFO] Starting usb camera")
             #cap = cv2.VideoCapture(0)
             self.VideoStream_obj = VideoStream(src=0).start()

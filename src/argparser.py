@@ -15,7 +15,7 @@ def Argparser(defaults):
                     nargs=1,
                     required=False,
                     choices=["file","ipcamera","usbcamera", "picamera"],
-                    default='file')
+                    default=["file"])
 
     ap.add_argument("-i", "--file-in",
                     help="ubicacion del archivo o direccion en caso de camara ip",
