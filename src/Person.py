@@ -26,16 +26,12 @@ class MyPerson:
         #self.tracker = cv2.TrackerKCF_create()
         #self.tracker.init(image, bbox)
         self.distx = 0
+        self.disty = 0
         self.kfObj = KalmanFilter()
-        self.predictedCoords = np.zeros((2, 1), np.float32)
-        self.predictedCoords = np.array([[np.float32(xi)],[np.float32(yi)]])
+        self.predictedCoords = np.array([[xi],[yi]],dtype=np.float32)
+        self.kfObj.first_detected(xi, yi)
+        self.kfObj.predic()
         self.kfObj.correct(self.predictedCoords)
-        self.predictedCoords = self.kfObj.Estimate(xi, yi)
-        self.predictedCoords = self.kfObj.Estimate(xi, yi)
-        self.predictedCoords = self.kfObj.Estimate(xi, yi)
-        self.predictedCoords = self.kfObj.Estimate(xi, yi)
-        self.predictedCoords = self.kfObj.Estimate(xi, yi)
-        self.predictedCoords = self.kfObj.Estimate(xi, yi)
         self.predictedCoords = self.kfObj.Estimate(xi, yi)
         self.i = i
         self.x = xi
@@ -71,23 +67,26 @@ class MyPerson:
         self.predictedCoords = self.kfObj.Estimate(xn, yn)
         if len(self.tracks) >= 2:
             self.distx = self.tracks[-1][0] - self.tracks[-2][0] + self.distx 
-            print("people id: "+ str(self.i) +"   distancia =" + str(self.distx))
+            self.disty = - self.tracks[0][-1] + self.tracks[0][-2] + self.disty
+            print("id:" + str(self.i) + " disty : "+ str(self.disty))
     def setDone(self):
         self.done = True
     def timedOut(self):
         return self.done
 
-    def getUp(self,ref):
-        if self.distx > ref:
-            return True
+    def getUp(self,ref,option=True):
+        if option:
+            return True if self.distx > ref else False
         else:
-            return False
+            return True if self.disty > ref else False
+        
 
-    def getDown(self,ref):
-        if self.distx < (- ref):
-            return True
+    def getDown(self,ref,option=True):
+        if option:
+            return True if self.distx < (- ref) else False
         else:
-            return False
+            return True if self.disty < (- ref) else False
+            
 
     def getAge(self):
         return self.age
@@ -149,23 +148,30 @@ class MultiPerson:
 # Instantiate OCV kalman filter
 class KalmanFilter:
     def __init__(self):
+        q = 1e-5   #  process noise covariance
+        r = 0.01 #  measurement noise covariance, r = 1
         self.kf = cv2.KalmanFilter(4, 2)
         self.kf.measurementMatrix = np.array([[1, 0, 0, 0], [0, 1, 0, 0]], np.float32)
         self.kf.transitionMatrix = np.array([[1, 0, 1, 0], [0, 1, 0, 1], [0, 0, 1, 0], [0, 0, 0, 1]], np.float32)
+        self.kf.processNoiseCov     = q* np.eye(4, dtype=np.float32)   # Q         
+        self.kf.measurementNoiseCov = r* np.eye(2, dtype=np.float32)   # R
+        self.kf.errorCovPost  = np.eye(4, dtype=np.float32)            # P0 = I
+        #self.kf.errorCovPost = np.ones((1, 1))
         #self.kf.processNoiseCov = np.array([[1,0,0,0],[0,1,0,0],[0,0,1,0],[0,0,0,1]],np.float32) * 0.03
     def Estimate(self, coordX, coordY):
         ''' This function estimates the position of the object'''
-        measured = np.array([[np.float32(coordX)], [np.float32(coordY)]])
-        self.kf.correct(measured)
-        predicted = self.kf.predict()
-        return predicted
+        self.kf.correct(np.array([[coordX],[coordY]],dtype=np.float32))
+        return self.kf.predict()
 
     def correct(self, cordenate):
         self.kf.correct(cordenate)
 
     def predic(self):
-        predicted = self.kf.predict()
-        return predicted
+        return self.kf.predict()
+    def first_detected(self, coordX, coordY):
+        self.kf.statePost=np.array([[coordX],[coordY],[0.],[0.]],dtype=np.float32)
+        #self.kf.statePost =  np.array([[np.float32(coordX)], [np.float32(coordY)]])    
+        
 
 class backproyection:
     def __init__(self, imgf):

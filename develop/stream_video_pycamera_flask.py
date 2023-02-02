@@ -14,11 +14,14 @@ import cv2
 app = Flask(__name__)
 # inicializa la cámara
 camera = PiCamera()
-#camera.resolution = (1920, 1080)
-##camera.framerate = 30
+camera.resolution = (640, 480)
+camera.framerate = 30
 camera.rotation = 180
 camera.hflip = True
-rawCapture = PiRGBArray(camera, size=(640, 480))
+
+time.sleep(2)
+
+rawCapture = PiRGBArray(camera, size=(640, 480))#640, 480
 
 # espera un tiempo a aque la cámara esté lista
 time.sleep(0.1)

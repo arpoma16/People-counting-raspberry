@@ -15,12 +15,12 @@ def Argparser(defaults):
                     nargs=1,
                     required=False,
                     choices=["file","ipcamera","usbcamera", "picamera"],
-                    default='picamera')
+                    default='file')
 
     ap.add_argument("-i", "--file-in",
                     help="ubicacion del archivo o direccion en caso de camara ip",
                     required=False,
-                    default= defaults["file_in"])
+                    default= "..//data//one_people_walking.mp4")
                     #default=defaults["path"] + '/' + defaults["file_in"])
 
     return vars(ap.parse_args())
