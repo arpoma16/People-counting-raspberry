@@ -14,7 +14,7 @@ app = Flask(__name__)
 # inicializa la cámara
 camera = Picamera2()
 camera.preview_configuration.main.size=(640,720)
-camera.preview_configuration.main.format="bgr"
+camera.preview_configuration.main.format="RGB888"
 camera.preview_configuration.align()
 camera.configure("preview")
 camera.start()
@@ -37,8 +37,7 @@ def generate():
     # capture frames from the camera
     while True:
         # tomamos el array de numpy que reprsenta la image
-        np_img = np.array(camera.capture_array())
-        
+        np_img = camera.capture_array()        
         new_frame_time = time.time()
         fps = 1/(new_frame_time-prev_frame_time)
         prev_frame_time = new_frame_time
