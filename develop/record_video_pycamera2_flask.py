@@ -31,7 +31,7 @@ new_frame_time = 0
  
 
 
-writer= cv2.VideoWriter('/home/pi/people_counting.avi', cv2.VideoWriter_fourcc(*'DIVX'), 10, (640,480))
+writer= cv2.VideoWriter('/home/pi/people_counting.avi', cv2.VideoWriter_fourcc(*'DIVX'), 10, (800,600))
 
 
 def generate():
