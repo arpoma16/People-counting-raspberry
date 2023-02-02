@@ -14,7 +14,7 @@ import cv2
 app = Flask(__name__)
 # inicializa la cámara
 camera = Picamera2()
-camera.preview_configuration.main.size=(800,600)
+camera.preview_configuration.main.size=(1280,720)
 camera.preview_configuration.main.format="RGB888"
 camera.preview_configuration.transform =Transform(hflip=1, vflip=1)
 camera.preview_configuration.align()
@@ -31,7 +31,7 @@ new_frame_time = 0
  
 
 
-writer= cv2.VideoWriter('/home/pi/people_counting.avi', cv2.VideoWriter_fourcc(*'DIVX'), 10, (800,600))
+writer= cv2.VideoWriter('/home/pi/people_counting.avi', cv2.VideoWriter_fourcc(*'DIVX'), 10, (1280,720))
 
 
 def generate():
