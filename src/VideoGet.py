@@ -11,9 +11,20 @@ class VideoStream:
         self.picamera = usePiCamera
         self.stopped = False
         self.grabbed = None
+        self.camera = None
         if usePiCamera:
-            from pivideostream import PiVideoStream
-            self.stream = PiVideoStream(resolution=resolution,framerate=framerate)
+            from picamera2 import Picamera2
+            from libcamera import Transform
+
+            self.camera = Picamera2()
+            self.camera.preview_configuration.main.size=(800,600)
+            self.camera.preview_configuration.main.format="RGB888"
+            self.camera.preview_configuration.transform =Transform(hflip=1, vflip=1)
+            self.camera.preview_configuration.align()
+            self.camera.configure("preview")
+            self.camera.start()
+            self.grabbed =True
+            self.frame = self.camera.capture_array() 
         else:
 			#self.stream = WebcamVideoStream(src=src)
             self.stream = cv2.VideoCapture(src)
@@ -23,6 +34,11 @@ class VideoStream:
         Thread(target=self.update, args=()).start()
         return self
 
+    def read(self):
+        if self.usePiCamera:
+            return ( True , self.camera.capture_array())
+        else:
+            return self.stream.read()
     def update(self):
         while not self.stopped:
             if not self.grabbed:
