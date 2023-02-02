@@ -18,7 +18,6 @@ class VideoStream:
 			#self.stream = WebcamVideoStream(src=src)
             self.stream = cv2.VideoCapture(src)
             (self.grabbed, self.frame) = self.stream.read()
-            #self.stopped = False
 
     def start(self):
         Thread(target=self.update, args=()).start()
@@ -30,11 +29,11 @@ class VideoStream:
                 self.stop()
             else:
                 (self.grabbed, self.frame) = self.stream.read()
-                time.sleep(.01)
+                time.sleep(.02)
         self.stream.release()
 
     def getframe(self):
-        return self.frame
+        return (self.grabbed, self.frame)
 
 
     def stop(self):

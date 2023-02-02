@@ -54,6 +54,7 @@ class Peoplecount:
         self.img_stream_send = None
         self.h=0
         self.w=0
+        self.stopped = False        
 
         if args["source"]=="file":
             print("[INFO] Starting the video ... "+ args['file_in'])
@@ -70,7 +71,7 @@ class Peoplecount:
             self.VideoStream_obj = VideoStream(src=0).start()
 
         time.sleep(2)
-        img_get = self.VideoStream_obj.getframe()
+        self.grabbed, img_get = self.VideoStream_obj.getframe()
         self.h = img_get.shape[0]
         self.w = img_get.shape[1]
         print(img_get.shape)
@@ -85,30 +86,22 @@ class Peoplecount:
     def nothing(x):
         pass
 
-    def PeopleCounter(self,img,areaTH):
-        imgw=self.w
-        imgh=self.h
+    def PeopleCounter(self,cap_img,areaTH):
         global frame,countdown,countup,pid,bid,max_p_age
         global persons,burbles,fgbg
-
-
+        img=cv2.GaussianBlur(cap_img,(5,5),cv2.BORDER_DEFAULT)
+        imgw=self.w
+        imgh=self.h
+        line_down =int(self.h/2)
+        line_up = int(self.h/2) 
 
         frame += 1
         print('[INFO] frame : ' + str(frame) + '   DOWN: '+ str(countdown) +'   UP: '+ str(countup))
-
-        #ret, img = cap.read()
 
         gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
         for i in persons:
             i.age_one()# edad de la persona en un img  age = 1
-
-        line_down = cv2.getTrackbarPos('downer','Counter-people')
-        line_up = cv2.getTrackbarPos('upper','Counter-people')
-        mysleep = cv2.getTrackbarPos('time', 'Counter-people')
-
-        if line_down > line_up:
-            cv2.setTrackbarPos('downer', 'Counter-people', line_up -1)
 
         #aplicacion del background sustraction
         fgmask2 = fgbg.apply(img)
@@ -123,7 +116,7 @@ class Peoplecount:
         contours0, hierarchy = cv2.findContours(mask2,cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_SIMPLE)
 
         thresh = cv2.merge((mask2,mask2,mask2))
-        res = cv2.bitwise_and(img,thresh)
+        res = cv2.bitwise_and(cap_img,thresh)
 
         exist = True
         for cnt in contours0:
@@ -248,45 +241,28 @@ class Peoplecount:
         # mostrar valores
         str_up = 'UP: '+ str(countup)
         str_down = 'DOWN: '+ str(countdown)
-        cv2.putText(img, str_up ,(10,40),font,0.5,(255,255,255),2,cv2.LINE_AA)
         cv2.putText(img, str_up ,(10,40),font,0.5,(0,0,255),1,cv2.LINE_AA)
         cv2.putText(img, str_down ,(10,90),font,0.5,(255,255,255),2,cv2.LINE_AA)
-        cv2.putText(img, str_down ,(10,90),font,0.5,(255,0,0),1,cv2.LINE_AA)
 
-        #Mostrar o actualizar pantallas	
-        cv2.imshow('Counter-people',img)
-        cv2.imshow('res',res) 
-        # delay
-        time.sleep(mysleep/1000.0)
+        self.img_stream_send = cv2.hconcat([img, res])
 
-        self.img_stream_send =  img
+    def stop(self):
+        self.stopped = True
 
     def update(self):
-
         areaTH = 1228.8
-        
-        
-        cv2.namedWindow('Counter-people')
-        cv2.createTrackbar('time', 'Counter-people', int(500), int(1000), self.nothing)
-        cv2.createTrackbar('downer', 'Counter-people', int(self.h/2), int(self.h), self.nothing)
-        cv2.createTrackbar('upper', 'Counter-people', int(5*self.h/8), int(self.h), self.nothing)
-        
-
-        while(True):
+        while not self.stopped:
             try:
-                img_get = self.VideoStream_obj.getframe()
-                self.PeopleCounter(img = img_get,areaTH=20)
+                if not self.grabbed:
+                    self.stop()
+                else:
+                    self.grabbed ,img_get  = self.VideoStream_obj.getframe()
+                    if self.grabbed:
+                        self.PeopleCounter(cap_img = img_get,areaTH=20)
             except AttributeError:
                 pass
-            
-            
-            #preisonar ESC para salir
-            k = cv2.waitKey(30) & 0xff
-            if k == 27:
-                break
-
+        
         self.VideoStream_obj.stop()
-        cv2.destroyAllWindows()
 
     def start(self):
         Thread(target=self.update, args=()).start()

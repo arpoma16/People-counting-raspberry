@@ -1,7 +1,4 @@
-from threading import Thread
-import numpy as np
 import cv2
-import time
 import os
 
 from Argparser import Argparser
@@ -10,6 +7,7 @@ from PeopleCounting import Peoplecount
 from flask import Flask
 from flask import render_template
 from flask import Response
+from flask import request
 
 
 
@@ -33,7 +31,7 @@ def generate():
                yield(b'--frame\r\n' b'Content-Type: image/jpeg\r\n\r\n' +
                     bytearray(encodedImage) + b'\r\n')
                     
-@app.route("/")
+@app.route("/", methods=['GET', 'POST'])
 def index():
      return render_template("index.html")
      
@@ -41,6 +39,7 @@ def index():
 def video_feed():
      return Response(generate(),
           mimetype = "multipart/x-mixed-replace; boundary=frame")
+
 
 def flaskThread():     
      app.run(host="0.0.0.0",debug=False)
