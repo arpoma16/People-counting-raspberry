@@ -12,7 +12,7 @@ class VideoStream:
         self.stopped = False
         self.grabbed = None
         self.camera = None
-        if usePiCamera:
+        if self.picamera:
             from picamera2 import Picamera2
             from libcamera import Transform
 
@@ -35,7 +35,7 @@ class VideoStream:
         return self
 
     def read(self):
-        if self.usePiCamera:
+        if self.picamera:
             return ( True , self.camera.capture_array())
         else:
             return self.stream.read()
