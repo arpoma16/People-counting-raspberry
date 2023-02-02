@@ -63,7 +63,7 @@ class Peoplecount:
             self.VideoStream_obj = VideoStream(src=args['file_in']).start()
 
         if args["source"]=="picamera":
-            print("[INFO] streaming the video  from picamera")
+            print("[INFO] streaming the video  from picamera ok")
             self.VideoStream_obj = VideoStream(usePiCamera=True,src=args['file_in']) .start()
 
         if args["source"]=="usbcamera":
