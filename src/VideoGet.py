@@ -44,7 +44,7 @@ class VideoStream:
             if not self.grabbed:
                 self.stop()
             else:
-                (self.grabbed, self.frame) = self.stream.read()
+                (self.grabbed, self.frame) = self.read()
                 time.sleep(.02)
         self.stream.release()
 
