@@ -122,7 +122,7 @@ class MyPerson:
         self.age += 1
         if self.age > self.max_age:
             self.done = True
-            print('done')
+            #print('done')
         return True
     """def prediction(self, image):
         self.ok, self.newbox = self.tracker.update(image)

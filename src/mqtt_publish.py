@@ -72,6 +72,7 @@ def publish(client):
     else:
         print(f"Failed to send message to topic {mqtt_default_topic}")
 
+
 def publish_taggo(client,variable = "input_people",value = 0):
     msg_json = {"variable": variable , "unit": "unit", "value": value}
     msg = json.dumps(msg_json)
@@ -91,6 +92,21 @@ def publish_people_out(client,value):
 def publish_people_into(client,value):
     publish_taggo(client,variable = "people_in_room",value = value)
 
+def publish_taggo_single(variable = "input_people",value = 0):
+    msg_json = {"variable": variable , "unit": "unit", "value": value}
+    mqtt_publish.single(mqtt_default_topic, payload=json.dumps(msg_json), qos=0, retain=False, hostname=mqtt_broker,
+    port=mqtt_port, client_id=mqtt_client_id, auth={'username':mqtt_username, 'password':mqtt_password}, 
+    tls=None, transport="tcp")
+
+def publish_people_in_single(value):
+    publish_taggo_single(variable = "input_people",value = value)
+
+def publish_people_out_single(value):
+    publish_taggo_single(variable = "output_people",value = value)
+
+def publish_people_into_single(value):
+    publish_taggo_single(variable = "people_in_room",value = value)
+
 #################################
 # Estado del contador
 # 0 todo bien   
@@ -103,6 +119,7 @@ def stop_mqtt(client):
     client.disconnect()
 
 
+
 if __name__ == '__main__':
     client = run_mqtt()
     time.sleep(1)  
@@ -113,7 +130,3 @@ if __name__ == '__main__':
     stop_mqtt(client)
     time.sleep(1)
     print("init single_publish ")
-    mqtt_publish.single(mqtt_default_topic, payload=json.dumps(input_count_json), qos=0, retain=False, hostname=mqtt_broker,
-    port=mqtt_port, client_id=mqtt_client_id, auth={'username':mqtt_username, 'password':mqtt_password}, 
-    tls=None, transport="tcp")
-    print("end single_publish ")

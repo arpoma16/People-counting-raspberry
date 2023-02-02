@@ -35,10 +35,12 @@ def Telegram_msg(msg):
     print(response.text)
 
 def telegram_DeviceOn():
-    Telegram_msg("Counter ON In: 0 Out:0  Into: 0 datetime" + datetime.strftime("%Y-%m-%d, %H:%M:%S"))
+    current_time = datetime.now()
+    Telegram_msg("Counter ON In: 0 Out:0  Into: 0 datetime" + current_time.strftime("%Y-%m-%d, %H:%M:%S"))
 
 def telegram_DeviceOff(input, output, into):
-    Telegram_msg("Counter OFF In: "+str(input)+" Out: "+str(output)+"  Into: "+str(into)+" datetime" + datetime.strftime("%Y-%m-%d, %H:%M:%S"))
+    current_time = datetime.now()
+    Telegram_msg("Counter OFF In: "+str(input)+" Out: "+str(output)+"  Into: "+str(into)+" datetime" + current_time.strftime("%Y-%m-%d, %H:%M:%S"))
 
 def telegram_Devicefull(count = 1):
     Telegram_msg("Room is full, people of more "+str(count))

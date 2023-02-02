@@ -22,9 +22,7 @@ defaults = {
 }
 
 
-countup = 0
-countdown = 0
-maxpeople=20
+maxpeople=2
 frame = 0
 bid =0
 pid = 1 #id de la persona 
@@ -55,11 +53,15 @@ class Peoplecount:
         self.img_stream_send = None
         self.h=0
         self.w=0
-        self.stopped = False        
+        self.stopped = False
+        self.maxpeople = 2
+        self.countup = 0
+        self.countdown = 0
+        self.countuplast = 0
+        self.countdownlast = 0
 
-        if args["source"][0]=="file":## ip camera y file es igual
+        if args["source"][0]=="file" or args["ipcamera"][0]=="file":## ip camera y file es igual
             print("[INFO] Starting the video ... "+ args['file_in'])
-            #cap = cv2.VideoCapture(args['file_in'])
             self.VideoStream_obj = VideoStream(src=args['file_in']).start()
 
         if args["source"][0]=="picamera":
@@ -68,27 +70,43 @@ class Peoplecount:
 
         if args["source"][0]=="usbcamera":
             print("[INFO] Starting usb camera")
-            #cap = cv2.VideoCapture(0)
             self.VideoStream_obj = VideoStream(src=0).start()
 
         time.sleep(2)
+
+        telegramBoot.telegram_DeviceOn()
+        mqtt_publish.publish_people_in_single(self.countup)
+        mqtt_publish.publish_people_out_single(self.countdown)
+        mqtt_publish.publish_people_into_single(self.countup-self.countdown)
+
         self.grabbed, img_get = self.VideoStream_obj.getframe()
         self.h = img_get.shape[0]
         self.w = img_get.shape[1]
         print(img_get.shape)
 
 
-    def update_count():
-        global countup,countdown,maxpeople
-        print("actualizando conteo - MQTT")
-        if countup-countdown>maxpeople:
-            print("y telegram alarm by alot people")
+    def update_count(self):
 
-    def nothing(x):
-        pass
+        if self.countdown != self.countdownlast or self.countup !=self.countuplast:
+            print("contador de entrada")
+            mqtt_publish.publish_people_into_single(self.countup-self.countdown)
+            if (self.countup-self.countdown)>self.maxpeople:
+                print("Telegram alarm --Full send each minute")
+                telegramBoot.telegram_Devicefull(self.countup-self.countdown)
+
+        if self.countup !=self.countuplast :
+            print("diferencia de contador de subida")
+            mqtt_publish.publish_people_in_single(self.countup)
+            self.countuplast = self.countup 
+
+        if self.countdown != self.countdownlast:
+            print("difenrencia de contador de salida")
+            mqtt_publish.publish_people_out_single(self.countdown)
+            self.countdownlast = self.countdown
+
 
     def PeopleCounter(self,cap_img,areaTH):
-        global frame,countdown,countup,pid,bid,max_p_age
+        global frame,pid,bid,max_p_age
         global persons,burbles,fgbg
         img=cv2.GaussianBlur(cap_img,(5,5),cv2.BORDER_DEFAULT)
         imgw=self.w
@@ -97,7 +115,7 @@ class Peoplecount:
         line_up = int(self.h/2) 
 
         frame += 1
-        print('[INFO] frame : ' + str(frame) + '   DOWN: '+ str(countdown) +'   UP: '+ str(countup))
+        #print('[INFO] frame : ' + str(frame) + '   DOWN: '+ str(self.countdown) +'   UP: '+ str(self.countup))
 
         gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
@@ -143,7 +161,7 @@ class Peoplecount:
             else:
                 cv2.rectangle(mask2,(x,y),(x+w,y+h),(0),-1)
         if exist:
-            print('NO CONTORNO')
+            #print('NO CONTORNO')
             for blob in burbles:
                 index = burbles.index(blob) #devielve la posicion del objeto
                 burbles.pop(index) #Elimina el objeto de la  index 
@@ -166,20 +184,20 @@ class Peoplecount:
                     if cy in  range (line_down-200,line_up+100):
                         for i in persons:
                             if  i.getX()  in range(x, x+w) and i.getY()  in range(y, y+h):
-                                print("actualiza cordenadas id: " ,i.getId(),"bbox", bbox)
+                                #print("actualiza cordenadas id: " ,i.getId(),"bbox", bbox)
                                 new = False
                                 i.updateCoords(cx,cy)# age = 0
                                 predictedCoords = i.prediction()
-                                print("predicted Coords"+str(predictedCoords))
+                                #print("predicted Coords"+str(predictedCoords))
                                 cv2.circle(img, (int(predictedCoords[0]), int(predictedCoords[1])), 20, (0,255,255), 2, 8)
                                 break
                             if len(i.getTracks()) >= 2:
-                                print("conteo i.getY()"+str(i.getY())+"  ---"+str( i.getUp(30,False))+" -- getTracks" +str(i.getTracks()[0][1]))
+                                #print("conteo i.getY()"+str(i.getY())+"  ---"+str( i.getUp(30,False))+" -- getTracks" +str(i.getTracks()[0][1]))
                                 if (i.getY() > line_up) and  i.getUp(30,False) and (i.getTracks()[0][1])<line_up:
-                                    countup +=1
+                                    self.countup +=1
                                     i.setDone()
                                 if (i.getY() < line_down) and  i.getDown(30,False) and (i.getTracks()[0][1])>line_down :
-                                    countdown +=1
+                                    self.countdown +=1
                                     i.setDone()
                             if i.timedOut():#return done 
                                 index = persons.index(i) #devielve la posicion del objeto
@@ -214,16 +232,16 @@ class Peoplecount:
 
                 if exist or posi:
                     if len(i.getTracks()) >= 2:
-                        print("conteo i.getY()"+str(i.getY())+"  ---"+str( i.getUp(30,False))+" -- getTracks" +str(i.getTracks()[0][1]))
+                        #print("conteo i.getY()"+str(i.getY())+"  ---"+str( i.getUp(30,False))+" -- getTracks" +str(i.getTracks()[0][1]))
                         if (i.getY() > line_up) and  i.getUp(30,False) and (i.getTracks()[0][1])<line_up:
-                            countup +=1
+                            self.countup +=1
                             i.setDone()
                         if (i.getY() < line_down) and  i.getDown(30,False) and (i.getTracks()[0][1])>line_down :
-                            countdown +=1
+                            self.countdown +=1
                             i.setDone()
                     index = persons.index(i) #devielve la posicion del objeto
                     persons.pop(index) #Elimina el objeto de la  index 
-                    print('timedOut2:  ',i.getId())
+                    #print('timedOut2:  ',i.getId())
                     del i
 
         #  creacion de las lineas
@@ -240,12 +258,13 @@ class Peoplecount:
         img = cv2.polylines(img,[pts_L2],False,line_up_color,thickness=2)
         
         # mostrar valores
-        str_up = 'UP: '+ str(countup)
-        str_down = 'DOWN: '+ str(countdown)
+        str_up = 'P.Entrado: '+ str(self.countup)
+        str_down = 'P.Salido: '+ str(self.countdown)
         cv2.putText(img, str_up ,(10,40),font,0.5,(0,0,255),1,cv2.LINE_AA)
         cv2.putText(img, str_down ,(10,90),font,0.5,(255,255,255),2,cv2.LINE_AA)
 
         self.img_stream_send = cv2.hconcat([img, res])
+        self.update_count()
 
     def stop(self):
         self.stopped = True
@@ -268,10 +287,10 @@ class Peoplecount:
     def start(self):
         Thread(target=self.update, args=()).start()
         return self
+
     def getimage(self):
         return self.img_stream_send
 
-        
 if __name__ == "__main__":
     args = Argparser(defaults)
     print(args)
