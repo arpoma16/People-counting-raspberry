@@ -1,7 +1,7 @@
 import cv2
 import os
 
-from Argparser import Argparser
+from argparser import Argparser
 from PeopleCounting import Peoplecount
 
 from flask import Flask
