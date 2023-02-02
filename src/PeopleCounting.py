@@ -55,7 +55,7 @@ class Peoplecount:
         self.countuplast = 0
         self.countdownlast = 0
 
-        if args["source"][0]=="file" or args["ipcamera"][0]=="file":## ip camera y file es igual
+        if args["source"][0]=="file" or args["source"][0]=="ipcamera":## ip camera y file es igual
             print("[INFO] Starting the video ... "+ args['file_in'])
             self.VideoStream_obj = VideoStream(src=args['file_in']).start()
 
