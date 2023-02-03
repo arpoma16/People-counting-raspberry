@@ -266,8 +266,8 @@ class Peoplecount:
         cv2.putText(img, str_down ,(10,90),font,0.5,(255,255,255),2,cv2.LINE_AA)
 
         self.img_stream_send = cv2.hconcat([img, res])
-        #self.update_count()
-        cv2.imshow('uno', img)
+        self.update_count()
+        #cv2.imshow('uno', img)
 
     def stop(self):
         self.stopped = True
@@ -282,9 +282,9 @@ class Peoplecount:
                     self.grabbed ,img_get  = self.VideoStream_obj.getframe()
                     if self.grabbed:
                         self.PeopleCounter(cap_img = img_get,areaTH=areaTH)
-                        k = cv2.waitKey(1) & 0xFF
-                        if k == 27:   # hit escape to quit
-                            break
+                        #k = cv2.waitKey(1) & 0xFF
+                        #if k == 27:   # hit escape to quit
+                        #    break
             except AttributeError:
                 pass
         
@@ -298,7 +298,7 @@ class Peoplecount:
         return self.img_stream_send
 
 if __name__ == "__main__":
-    cv2.namedWindow('uno')
+    #cv2.namedWindow('uno')
     args = Argparser(defaults)
     print(args)
     print(args["source"])
