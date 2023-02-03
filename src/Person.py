@@ -33,6 +33,7 @@ class MyPerson:
         self.kfObj.predic()
         self.kfObj.correct(self.predictedCoords)
         self.predictedCoords = self.kfObj.Estimate(xi, yi)
+        self.tracker =cv2.TrackerMIL_create()
         self.i = i
         self.x = xi
         self.y = yi
@@ -45,6 +46,10 @@ class MyPerson:
         self.age = 0
         self.max_age = max_age
         self.dir = None
+    def init_opencv_traker(self,frame,bbox):
+        self.tracker.init(frame, bbox)
+    def update_opencv_traker(self,frame):
+        return self.tracker.update(frame)
     def getRGB(self):
         return (self.R,self.G,self.B)
     def getTracks(self):
@@ -67,7 +72,7 @@ class MyPerson:
         self.predictedCoords = self.kfObj.Estimate(xn, yn)
         if len(self.tracks) >= 2:
             self.distx = self.tracks[-1][0] - self.tracks[-2][0] + self.distx 
-            self.disty = - self.tracks[0][-1] + self.tracks[0][-2] + self.disty
+            self.disty = - self.tracks[-1][1] + self.tracks[-2][1] + self.disty
             #print("id:" + str(self.i) + " disty : "+ str(self.disty))
     def setDone(self):
         self.done = True
@@ -76,17 +81,28 @@ class MyPerson:
 
     def getUp(self,ref,option=True):
         if option:
-            return True if self.distx > ref else False
+            if self.distx > ref :
+                return True
+            else: 
+                return False
         else:
-            return True if self.disty > ref else False
+            if self.disty <(- ref):
+                return True      
+            else:
+                return False
         
 
     def getDown(self,ref,option=True):
         if option:
-            return True if self.distx < (- ref) else False
+            if self.distx < (- ref):
+                return True
+            else:
+                return False
         else:
-            return True if self.disty < (- ref) else False
-            
+            if self.disty > ( ref):
+                return True
+            else:
+                return False            
 
     def getAge(self):
         return self.age

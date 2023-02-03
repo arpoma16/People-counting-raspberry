@@ -32,7 +32,7 @@ def Telegram_msg(msg):
 
     response = requests.post(Telegram_api_sendMessage, json=payload, headers=headers)
 
-    print(response.text)
+    #print(response.text)
 
 def telegram_DeviceOn():
     current_time = datetime.now()

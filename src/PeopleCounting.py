@@ -21,7 +21,7 @@ maxpeople=2
 frame = 0
 bid =0
 pid = 1 #id de la persona 
-max_p_age = 5
+max_p_age = 10
 persons = []
 burbles = []
 fgbg = cv2.createBackgroundSubtractorMOG2(history = 3000, varThreshold = 60,detectShadows = True)
@@ -78,6 +78,7 @@ class Peoplecount:
         self.h = img_get.shape[0]
         self.w = img_get.shape[1]
         print(img_get.shape)
+        
 
 
     def update_count(self):
@@ -152,8 +153,8 @@ class Peoplecount:
                 # si dos borbujas estan cerca y tienen el mismo color 
                 # tomar encuanta burbujar con un w>50 h>50
                 exist = False
-                #cv2.rectangle(img,(x,y),(x+w,y+h),(0,255,0),2)
-                #cv2.circle(img,(int(x+w/2),int(y+h/2)), 5, (0,255,0), -1)
+                cv2.rectangle(img,(x,y),(x+w,y+h),(0,255,0),2)
+                cv2.circle(img,(int(x+w/2),int(y+h/2)), 5, (0,255,0), -1)
             else:
                 cv2.rectangle(mask2,(x,y),(x+w,y+h),(0),-1)
         if exist:
@@ -177,7 +178,7 @@ class Peoplecount:
 
                 if w > 50:
                     new = True
-                    if cy in  range (line_down-200,line_up+100):
+                    if cy in  range (line_down-200,line_up+200):
                         for i in persons:
                             if  i.getX()  in range(x, x+w) and i.getY()  in range(y, y+h):
                                 #print("actualiza cordenadas id: " ,i.getId(),"bbox", bbox)
@@ -188,7 +189,7 @@ class Peoplecount:
                                 cv2.circle(img, (int(predictedCoords[0]), int(predictedCoords[1])), 20, (0,255,255), 2, 8)
                                 break
                             if len(i.getTracks()) >= 2:
-                                print("conteo i.getY()"+str(i.getY())+"  ---"+str( i.getUp(30,False))+" -- getTracks" +str(i.getTracks()[0][1]))
+                                print("conteo i.getY()"+str(i.getY())+"  ----- getTracks" +str(i.getTracks()[0][1]))
                                 if (i.getY() > line_up) and  i.getUp(30,False) and (i.getTracks()[0][1])<line_up:
                                     self.countup +=1
                                     i.setDone()
@@ -210,7 +211,9 @@ class Peoplecount:
                     # persona dentro de la zona de interez
 
         for i in persons:
+            
             if len(i.getTracks()) >= 2:
+                print( "id:"+str(i.getId()) +"-"+ str(i.getDown(30,False)) +"-"+ str(i.getUp(30,False))+"conteo i.getY()"+str(i.getY())+"conteo i.getx()"+str(i.getX())+" init" +str(i.getTracks()[0][1]))
                 pts = np.array(i.getTracks(), np.int32)
                 pts = pts.reshape((-1,1,2))
                 img = cv2.polylines(img,[pts],False,i.getRGB())
@@ -224,12 +227,14 @@ class Peoplecount:
                 for cnt in contours0:
                     area = cv2.contourArea(cnt)
                     x,y,w,h = cv2.boundingRect(cnt)
-                    if  i.getX()  in range(x, x+w) and i.getY()  in range(y, y+h):
-                        posi = True
+                    if area > areaTH and w > 50 and h > 50:
+                        if  i.getX()  in range(x, x+w) and i.getY()  in range(y, y+h):
+                            posi = True
+                            i.updateCoords(x+w/2,y+h/2)
 
                 if exist or posi:
                     if len(i.getTracks()) >= 2:
-                        print("111conteo i.getY()"+str(i.getY())+"  ---"+str( i.getUp(30,False))+" -- getTracks" +str(i.getTracks()[0][1]))
+                        print("111conteo i.getY()"+str(i.getY())+"  --- -- getTracks" +str(i.getTracks()[0][1]))
                         if (i.getY() > line_up) and  i.getUp(30,False) and (i.getTracks()[0][1])<line_up:
                             self.countup +=1
                             i.setDone()
@@ -261,7 +266,8 @@ class Peoplecount:
         cv2.putText(img, str_down ,(10,90),font,0.5,(255,255,255),2,cv2.LINE_AA)
 
         self.img_stream_send = cv2.hconcat([img, res])
-        self.update_count()
+        #self.update_count()
+        cv2.imshow('uno', img)
 
     def stop(self):
         self.stopped = True
@@ -275,7 +281,10 @@ class Peoplecount:
                 else:
                     self.grabbed ,img_get  = self.VideoStream_obj.getframe()
                     if self.grabbed:
-                        self.PeopleCounter(cap_img = img_get,areaTH=20)
+                        self.PeopleCounter(cap_img = img_get,areaTH=areaTH)
+                        k = cv2.waitKey(1) & 0xFF
+                        if k == 27:   # hit escape to quit
+                            break
             except AttributeError:
                 pass
         
@@ -289,8 +298,11 @@ class Peoplecount:
         return self.img_stream_send
 
 if __name__ == "__main__":
+    cv2.namedWindow('uno')
     args = Argparser(defaults)
     print(args)
     print(args["source"])
     peopleobj = Peoplecount(args)
     peopleobj.update()
+
+    
