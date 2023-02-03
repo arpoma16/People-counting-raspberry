@@ -105,14 +105,13 @@ class Peoplecount:
     def PeopleCounter(self,cap_img,areaTH):
         global frame,pid,bid,max_p_age
         global persons,burbles,fgbg
-        img=cv2.GaussianBlur(cap_img,(5,5),cv2.BORDER_DEFAULT)
+        img=cv2.GaussianBlur(cap_img,(3,3),cv2.BORDER_DEFAULT)
         imgw=self.w
         imgh=self.h
         line_down =int(self.h/2)
         line_up = int(self.h/2) 
 
         frame += 1
-        #print('[INFO] frame : ' + str(frame) + '   DOWN: '+ str(self.countdown) +'   UP: '+ str(self.countup))
 
         gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
@@ -220,16 +219,17 @@ class Peoplecount:
                 predictedCoords = i.predict()
                 cv2.circle(img, (int(predictedCoords[0]), int(predictedCoords[1])), 20, [255,0,255], 2, 8)
                 #i.updateCoords(predictedCoords[0], predictedCoords[1])
-                posi = True
+                posi = False
+                exist = False
                 for cnt in contours0:
                     area = cv2.contourArea(cnt)
                     x,y,w,h = cv2.boundingRect(cnt)
                     if  i.getX()  in range(x, x+w) and i.getY()  in range(y, y+h):
-                        posi = False
+                        posi = True
 
                 if exist or posi:
                     if len(i.getTracks()) >= 2:
-                        print("conteo i.getY()"+str(i.getY())+"  ---"+str( i.getUp(30,False))+" -- getTracks" +str(i.getTracks()[0][1]))
+                        print("111conteo i.getY()"+str(i.getY())+"  ---"+str( i.getUp(30,False))+" -- getTracks" +str(i.getTracks()[0][1]))
                         if (i.getY() > line_up) and  i.getUp(30,False) and (i.getTracks()[0][1])<line_up:
                             self.countup +=1
                             i.setDone()
@@ -260,7 +260,7 @@ class Peoplecount:
         cv2.putText(img, str_up ,(10,40),font,0.5,(0,0,255),1,cv2.LINE_AA)
         cv2.putText(img, str_down ,(10,90),font,0.5,(255,255,255),2,cv2.LINE_AA)
 
-        self.img_stream_send = img#cv2.hconcat([img, res])
+        self.img_stream_send = cv2.hconcat([img, res])
         self.update_count()
 
     def stop(self):
