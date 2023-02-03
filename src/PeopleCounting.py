@@ -153,8 +153,8 @@ class Peoplecount:
                 # si dos borbujas estan cerca y tienen el mismo color 
                 # tomar encuanta burbujar con un w>50 h>50
                 exist = False
-                cv2.rectangle(img,(x,y),(x+w,y+h),(0,255,0),2)
-                cv2.circle(img,(int(x+w/2),int(y+h/2)), 5, (0,255,0), -1)
+                #cv2.rectangle(img,(x,y),(x+w,y+h),(0,255,0),2)
+                #cv2.circle(img,(int(x+w/2),int(y+h/2)), 5, (0,255,0), -1)
             else:
                 cv2.rectangle(mask2,(x,y),(x+w,y+h),(0),-1)
         if exist:
@@ -265,7 +265,7 @@ class Peoplecount:
         cv2.putText(img, str_up ,(10,40),font,0.5,(0,0,255),1,cv2.LINE_AA)
         cv2.putText(img, str_down ,(10,90),font,0.5,(255,255,255),2,cv2.LINE_AA)
 
-        self.img_stream_send = cv2.hconcat([img, res])
+        self.img_stream_send = img# cv2.hconcat([img, res])
         self.update_count()
         #cv2.imshow('uno', img)
 
