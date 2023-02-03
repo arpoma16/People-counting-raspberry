@@ -68,7 +68,7 @@ class MyPerson:
         if len(self.tracks) >= 2:
             self.distx = self.tracks[-1][0] - self.tracks[-2][0] + self.distx 
             self.disty = - self.tracks[0][-1] + self.tracks[0][-2] + self.disty
-            print("id:" + str(self.i) + " disty : "+ str(self.disty))
+            #print("id:" + str(self.i) + " disty : "+ str(self.disty))
     def setDone(self):
         self.done = True
     def timedOut(self):
