@@ -153,8 +153,8 @@ class Peoplecount:
                 # si dos borbujas estan cerca y tienen el mismo color 
                 # tomar encuanta burbujar con un w>50 h>50
                 exist = False
-                cv2.rectangle(img,(x,y),(x+w,y+h),(0,255,0),2)
-                cv2.circle(img,(int(x+w/2),int(y+h/2)), 5, (0,255,0), -1)
+                #cv2.rectangle(img,(x,y),(x+w,y+h),(0,255,0),2)
+                #cv2.circle(img,(int(x+w/2),int(y+h/2)), 5, (0,255,0), -1)
             else:
                 cv2.rectangle(mask2,(x,y),(x+w,y+h),(0),-1)
         if exist:
@@ -168,7 +168,7 @@ class Peoplecount:
 
         ## darle algo mas pequeño para que pueda determinar si es o no es una persona.
 
-        results = overpeople_cascade.detectMultiScale(gray, 8, 5)
+        results = overpeople_cascade.detectMultiScale(gray, 7, 5)
         if ret:
             for (color, result) in zip(colors, results):#obtiene la poscicion de los haarcascade encontrados 
                 (x,y,w,h) = result
@@ -189,7 +189,7 @@ class Peoplecount:
                                 cv2.circle(img, (int(predictedCoords[0]), int(predictedCoords[1])), 20, (0,255,255), 2, 8)
                                 break
                             if len(i.getTracks()) >= 2:
-                                #print("conteo i.getY()"+str(i.getY())+"  ---"+str( i.getUp(30,False))+" -- getTracks" +str(i.getTracks()[0][1]))
+                                print("conteo i.getY()"+str(i.getY())+"  ---"+str( i.getUp(30,False))+" -- getTracks" +str(i.getTracks()[0][1]))
                                 if (i.getY() > line_up) and  i.getUp(30,False) and (i.getTracks()[0][1])<line_up:
                                     self.countup +=1
                                     i.setDone()
@@ -229,7 +229,7 @@ class Peoplecount:
 
                 if exist or posi:
                     if len(i.getTracks()) >= 2:
-                        #print("conteo i.getY()"+str(i.getY())+"  ---"+str( i.getUp(30,False))+" -- getTracks" +str(i.getTracks()[0][1]))
+                        print("conteo i.getY()"+str(i.getY())+"  ---"+str( i.getUp(30,False))+" -- getTracks" +str(i.getTracks()[0][1]))
                         if (i.getY() > line_up) and  i.getUp(30,False) and (i.getTracks()[0][1])<line_up:
                             self.countup +=1
                             i.setDone()

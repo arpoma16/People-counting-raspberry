@@ -23,12 +23,11 @@ class VideoStream:
             self.camera.preview_configuration.align()
             self.camera.configure("preview")
             self.camera.start()
-            self.grabbed =True
-            self.frame = self.camera.capture_array() 
+            (self.grabbed,  self.frame) = self.read() 
         else:
 			#self.stream = WebcamVideoStream(src=src)
             self.stream = cv2.VideoCapture(src)
-            (self.grabbed, self.frame) = self.stream.read()
+            (self.grabbed, self.frame) = self.read()
 
     def start(self):
         Thread(target=self.update, args=()).start()
@@ -36,7 +35,7 @@ class VideoStream:
 
     def read(self):
         if self.picamera:
-            return ( True , self.camera.capture_array())
+            return ( True , cv2.resize(self.camera.capture_array(), (640, 480),interpolation = cv2.INTER_LINEAR))
         else:
             return self.stream.read()
     def update(self):
