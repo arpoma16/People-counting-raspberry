@@ -1,40 +1,57 @@
-# Counting people with raspbery pi
+# Counting people with raspberry pi
 
 ## About
 
-This project is developed like a project of Sistemas Digitales Avanzados of MIERA in US.
+This project is developed like a project of Sistemas Digitales Avanzados of MIERA in Universidad de Sevilla.
 
-This project use a rapsbery py for counting-people across a door and sent this data to internet to tago io using mqtt and send a alarm to telegram chat group for  when the place is full and the device is turn on and turn off.
+This project uses a raspberry py for counting people across a door and sent this data to the internet to TAGOIO using MQTT to send data about counting and alarm in TELEGRAM chat group for when the place is full and the device is turned on and turned off.
 
 This proyect is based on  [People counting HOG + Linear SVM](https://pyimagesearch.com/2018/08/13/opencv-people-counter/) and  [People counting using blob](https://blogs.wcode.org/2015/04/footfall-a-camera-based-people-counting-system-for-under-60/)
 
-This is based in two step
 
-- Object detector (HOG with SVM, hard cascade)
-- Object tracker (corelational filter and distance betwen frames)
+This is based on a two-step
+
+    - Object detector ( hard cascade )
+    - Object tracker (background subtraction, distance between frames, and Kalman filter)
 
 ## Structure
 
     Project \
-        - data      # Videos, images and sources
+        - data      # Videos, images, and sources
         - src       # Scritps & local project modules
-        - develop   # for exploratory analysis
-        - deliver   # presentations, analisis
-        - test
+        - develop   # for exploratory, tools that help to develop the project
+        - deliver   # presentations
 
-## Usage
+## how to use 
 
-Change the values in .env  for your tago count and tocken of telegram.
+Before implementing this project change the .env.example and copy as .env and change it with your data.
+Change the values in .env  for your TAGOIO count and token of telegram.
 
-you have to run command in the root of proyect like:
+you have to run commands in the src folder like:
 
-        python .\src\main.py --source file --file-in data/Video_example01.avi
+    python .\main.py --source picamera
+
+if you want to run it without the web server  you can run the command:
+
+    python .\PeopleCounting.py 
+
 
 ## Dependecies
 
 - python3
 - numpy
 - opencv [please install in raspberry py like this](https://qengineering.eu/install-opencv-4.5-on-raspberry-pi-4.html)
+- flask
+- requests
+- os
+- threading
+- random
+- time
+- dotenv
+- argparse
+- paho.mqtt
+- json
+- picamera2 ( only for run in raspberry pi )
 
 you can use requirements.txt
 
@@ -47,20 +64,8 @@ how use virtualenv
     \env\Scripts\deactivate.bat
     pip freeze > requirements.txt
 
-## Build
 
-Using rapsbery pi  and pycamera
 
-    python3 people-counting.py 
-
-using a pc and ip camera
-
-    python3 people-counting.py  -souce:ipcamera
-
-the direction of ipcamera have to set in .env
-using a pc and video recored .mp4
-
-    python3 people-counting.py  -source:video -path:D:\Master\video.mp4
 
 ## Referents
 
@@ -82,6 +87,6 @@ We can use a flask [like this tutorial](https://omes-va.com/videostreaming-flask
 and this [flask with thread](https://pyimagesearch.com/2019/09/02/opencv-stream-video-to-web-browser-html-page/)
 ## Authors
 
-- Alvaro Poma.
+- [Alvaro Poma.](https://github.com/arpoma16)
 
 - Nelson Molina.
